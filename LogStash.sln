@@ -1,0 +1,44 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.2.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{827E0CD3-B72D-47B6-A68D-7590B98EB39B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EventLogger.Api", "src\EventLogger.Api\EventLogger.Api.csproj", "{15D09713-35F4-0896-4527-C3867786C62C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EventLogger.Tests", "src\EventLogger.Tests\EventLogger.Tests.csproj", "{ECAE06D5-4BC0-AF1C-7366-4748E9F31FD7}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{8EC462FD-D22E-90A8-E5CE-7E832BA40C5D}"
+	ProjectSection(SolutionItems) = preProject
+		docker-compose.yml = docker-compose.yml
+		README.md = README.md
+		simple-setup.ps1 = simple-setup.ps1
+		template.yaml = template.yaml
+		test-api-adaptive.ps1 = test-api-adaptive.ps1
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{15D09713-35F4-0896-4527-C3867786C62C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{15D09713-35F4-0896-4527-C3867786C62C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{15D09713-35F4-0896-4527-C3867786C62C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{15D09713-35F4-0896-4527-C3867786C62C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ECAE06D5-4BC0-AF1C-7366-4748E9F31FD7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ECAE06D5-4BC0-AF1C-7366-4748E9F31FD7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ECAE06D5-4BC0-AF1C-7366-4748E9F31FD7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ECAE06D5-4BC0-AF1C-7366-4748E9F31FD7}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{15D09713-35F4-0896-4527-C3867786C62C} = {827E0CD3-B72D-47B6-A68D-7590B98EB39B}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {99BE6FFA-445E-4DA4-BCA3-A4F6B6A366F1}
+	EndGlobalSection
+EndGlobal

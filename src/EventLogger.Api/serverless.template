@@ -1,0 +1,49 @@
+{
+  "AWSTemplateFormatVersion": "2010-09-09",
+  "Transform": "AWS::Serverless-2016-10-31",
+  "Description": "EventLogger API - Local SAM template",
+  "Resources": {
+    "EventLoggerApiFunction": {
+      "Type": "AWS::Serverless::Function",
+      "Properties": {
+        "Handler": "EventLogger.Api::EventLogger.Api.LambdaEntryPoint::FunctionHandlerAsync",
+        "Runtime": "dotnet8",
+        "CodeUri": "",
+        "MemorySize": 512,
+        "Timeout": 30,
+        "Environment": {
+          "Variables": {
+            "ASPNETCORE_ENVIRONMENT": "Development",
+            "ConnectionStrings__SqlServer": "Server=host.docker.internal,1433;Database=EventsDb;User Id=sa;Password=YourStrong@Passw0rd;TrustServerCertificate=True",
+            "DynamoDb__TableName": "EventDetails-Local",
+            "DynamoDb__ServiceUrl": "http://host.docker.internal:8000"
+          }
+        },
+        "Events": {
+          "ProxyResource": {
+            "Type": "Api",
+            "Properties": {
+              "Path": "/{proxy+}",
+              "Method": "ANY"
+            }
+          },
+          "RootResource": {
+            "Type": "Api",
+            "Properties": {
+              "Path": "/",
+              "Method": "ANY"
+            }
+          }
+        }
+      }
+    }
+  },
+  "Outputs": {
+    "ApiURL": {
+      "Description": "API endpoint URL for local environment",
+      "Value": {
+        "Fn::Sub": "http://localhost:3000/"
+      }
+    }
+  }
+}

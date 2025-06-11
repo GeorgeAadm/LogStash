@@ -1,0 +1,84 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: EventLogger API - Serverless event logging service
+
+Globals:
+  Function:
+    Timeout: 30
+    MemorySize: 512
+    Runtime: dotnet8
+    Architectures:
+      - x86_64
+    Environment:
+      Variables:
+        ASPNETCORE_ENVIRONMENT: Production
+
+Parameters:
+  SqlServerConnectionString:
+    Type: String
+    Description: SQL Server connection string
+    NoEcho: true
+    Default: "Server=localhost,1433;Database=EventsDb;User Id=sa;Password=YourStrong@Passw0rd;TrustServerCertificate=True"
+  
+  DynamoDbTableName:
+    Type: String
+    Description: DynamoDB table name for event details
+    Default: EventDetails-Local
+
+Resources:
+  EventLoggerApi:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: EventLogger.Api::EventLogger.Api.LambdaEntryPoint::FunctionHandlerAsync
+      CodeUri: ./src/EventLogger.Api/
+      Description: EventLogger API Lambda function
+      Environment:
+        Variables:
+          ConnectionStrings__SqlServer: !Ref SqlServerConnectionString
+          DynamoDb__TableName: !Ref DynamoDbTableName
+      Events:
+        ProxyResource:
+          Type: Api
+          Properties:
+            Path: /{proxy+}
+            Method: ANY
+        RootResource:
+          Type: Api
+          Properties:
+            Path: /
+            Method: ANY
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !Ref DynamoDbTableName
+        - VPCAccessPolicy: {}
+
+  # DynamoDB Table (only created when deploying to AWS, not for local)
+  EventDetailsTable:
+    Type: AWS::DynamoDB::Table
+    Condition: CreateDynamoDBTable
+    Properties:
+      TableName: !Ref DynamoDbTableName
+      AttributeDefinitions:
+        - AttributeName: EventId
+          AttributeType: S
+      KeySchema:
+        - AttributeName: EventId
+          KeyType: HASH
+      BillingMode: PAY_PER_REQUEST
+      StreamSpecification:
+        StreamViewType: NEW_AND_OLD_IMAGES
+      Tags:
+        - Key: Application
+          Value: EventLogger
+
+Conditions:
+  CreateDynamoDBTable: !Not [!Equals [!Ref AWS::StackName, "local-testing"]]
+
+Outputs:
+  ApiUrl:
+    Description: API Gateway endpoint URL
+    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/"
+  
+  FunctionArn:
+    Description: Lambda Function ARN
+    Value: !GetAtt EventLoggerApi.Arn
