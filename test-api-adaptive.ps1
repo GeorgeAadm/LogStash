@@ -3,16 +3,16 @@ param(
     [string]$BaseUrl = "http://localhost:5153",
     [switch]$Sam,
     [switch]$Verbose,
-    [int]$DelaySeconds = 1  # Added back the DelaySeconds parameter
+    [int]$DelaySeconds = 1
 )
 
 if ($Sam) { $BaseUrl = "http://127.0.0.1:3000" }
 
 # Color functions
-function Write-Success($msg) { Write-Host "✅ $msg" -ForegroundColor Green }
-function Write-Error($msg) { Write-Host "❌ $msg" -ForegroundColor Red }
-function Write-Test($msg) { Write-Host "🔸 $msg" -ForegroundColor Yellow }
-function Write-Info($msg) { Write-Host "ℹ️  $msg" -ForegroundColor Cyan }
+function Write-Success($msg) { Write-Host "[+] $msg" -ForegroundColor Green }
+function Write-Error($msg) { Write-Host "[-] $msg" -ForegroundColor Red }
+function Write-Test($msg) { Write-Host "[*] $msg" -ForegroundColor Yellow }
+function Write-Info($msg) { Write-Host "[i] $msg" -ForegroundColor Cyan }
 
 $script:testCount = 0
 $script:passCount = 0
@@ -24,7 +24,7 @@ function Test-ApiCall {
         [string]$Method,
         [string]$Endpoint,
         [hashtable]$Body = $null,
-        [int[]]$AcceptableStatus = @(200, 201)  # Accept multiple status codes
+        [int[]]$AcceptableStatus = @(200, 201)
     )
     
     $script:testCount++
@@ -110,8 +110,8 @@ function Test-ApiCall {
     }
 }
 
-Write-Host "`n🧪 Testing API at $BaseUrl" -ForegroundColor Cyan
-Write-Host "================================`n" -ForegroundColor Cyan
+Write-Host "`nTesting API at $BaseUrl" -ForegroundColor Cyan
+Write-Host "========================`n" -ForegroundColor Cyan
 
 if ($Verbose) {
     Write-Info "Running in VERBOSE mode - will show request/response details"
@@ -123,7 +123,7 @@ if ($DelaySeconds -gt 0) {
 }
 
 # Auto-detect API behavior
-Write-Info "🔍 Auto-detecting API response patterns..."
+Write-Info "Auto-detecting API response patterns..."
 
 $healthStatus = $null
 $postStatus = $null
@@ -160,12 +160,12 @@ $postAcceptable = if ($postStatus -eq 201) { @(201) } elseif ($postStatus -eq 20
 
 Write-Success "Using GET acceptable: $($getAcceptable -join ', '), POST acceptable: $($postAcceptable -join ', ')"
 
-Write-Host "`n🚀 Starting Tests" -ForegroundColor Yellow
+Write-Host "`nStarting Tests" -ForegroundColor Yellow
 
 # Test 1: Health Check
 Test-ApiCall -TestName "Health Check" -Method "GET" -Endpoint "/api/healthcheck" -AcceptableStatus $getAcceptable
 
-Write-Host "`n👤 USER 1: alice@company.com" -ForegroundColor Magenta
+Write-Host "`nUSER 1: alice@company.com" -ForegroundColor Magenta
 
 # Test 2-6: Alice's Events
 Test-ApiCall -TestName "Alice Login" -Method "POST" -Endpoint "/api/events" -AcceptableStatus $postAcceptable -Body @{
@@ -216,7 +216,7 @@ Test-ApiCall -TestName "Alice Simple Event (No Details)" -Method "POST" -Endpoin
     source = "web"
 }
 
-Write-Host "`n👤 USER 2: bob@company.com" -ForegroundColor Magenta
+Write-Host "`nUSER 2: bob@company.com" -ForegroundColor Magenta
 
 # Test 7-11: Bob's Events
 Test-ApiCall -TestName "Bob Mobile Login" -Method "POST" -Endpoint "/api/events" -AcceptableStatus $postAcceptable -Body @{
@@ -273,7 +273,7 @@ Test-ApiCall -TestName "Bob Logout" -Method "POST" -Endpoint "/api/events" -Acce
     }
 }
 
-Write-Host "`n🔍 Data Retrieval Tests" -ForegroundColor Magenta
+Write-Host "`nData Retrieval Tests" -ForegroundColor Magenta
 
 # Wait for processing
 Start-Sleep -Seconds 10
@@ -289,19 +289,19 @@ Test-ApiCall -TestName "Get Bob Recent (Limit 3)" -Method "GET" -Endpoint "/api/
 
 Test-ApiCall -TestName "Get Non-existent User" -Method "GET" -Endpoint "/api/events/nonexistent@test.com" -AcceptableStatus @(404)
 
-Write-Host "`n📊 Test Summary" -ForegroundColor Yellow
-Write-Host "===============" -ForegroundColor Yellow
+Write-Host "`nTest Summary" -ForegroundColor Yellow
+Write-Host "============" -ForegroundColor Yellow
 Write-Host "Total Tests: $script:testCount" -ForegroundColor White
 Write-Success "Passed: $script:passCount"
 Write-Error "Failed: $script:failCount"
 Write-Host "Success Rate: $([math]::Round(($script:passCount / $script:testCount) * 100, 1))%" -ForegroundColor Cyan
 
 if ($script:failCount -eq 0) {
-    Write-Host "`n🎉 All tests passed!" -ForegroundColor Green
+    Write-Host "`nAll tests passed!" -ForegroundColor Green
 } else {
-    Write-Host "`n⚠️  Some tests failed. Check API logs." -ForegroundColor Yellow
+    Write-Host "`nSome tests failed. Check API logs." -ForegroundColor Yellow
 }
 
-Write-Host "`n🔍 Next Steps:" -ForegroundColor Cyan
-Write-Host "  🔸 Check SQL: SELECT COUNT(*) FROM EventMetadata;" -ForegroundColor White
-Write-Host "  🔸 Check DynamoDB: http://localhost:8001" -ForegroundColor White
+Write-Host "`nNext Steps:" -ForegroundColor Cyan
+Write-Host "  - Check SQL: SELECT COUNT(*) FROM EventMetadata;" -ForegroundColor White
+Write-Host "  - Check DynamoDB: http://localhost:8001" -ForegroundColor White

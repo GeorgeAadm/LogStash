@@ -72,10 +72,11 @@ The API will be available at:
 cd src/EventLogger.Api
 
 # Build the Lambda package
-dotnet lambda package
+dotnet clean
+dotnet publish -c Release -o bin/Release/net8.0/publish
 
 # Start SAM local API
-sam local start-api -t serverless.template
+sam local start-api -t serverless.template --docker-network bridge
 ```
 
 The API will be available at `http://localhost:3000`
@@ -157,6 +158,9 @@ dotnet test
 
 # Verbose mode for debugging
 .\test-api-adaptive.ps1 -Verbose
+
+# Combine flags
+.\test-api-adaptive.ps1 -Sam -Verbose -DelaySeconds 2
 ```
 
 ## Configuration
@@ -265,6 +269,9 @@ sam deploy
    - Update SAM CLI: `pip install --upgrade aws-sam-cli`
    - Check Docker is running
    - Use `host.docker.internal` for local services
+
+5. **PowerShell**
+   - Allow running script (session) `Set-ExecutionPolicy -ExecutionPolicy Bypass -Scope Process`
 
 ## Contributing
 
