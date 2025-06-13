@@ -2,45 +2,11 @@
 
 A serverless event logging API built with .NET 8, AWS Lambda, SQL Server, and DynamoDB. This solution demonstrates a hybrid data storage approach where structured metadata is stored in SQL Server and flexible event details are stored as JSON in DynamoDB.
 
-## Architecture Overview
-
-- **API Layer**: ASP.NET Core Web API running on AWS Lambda
-- **Metadata Storage**: SQL Server for structured event metadata
-- **Details Storage**: DynamoDB for flexible JSON event details
-- **Deployment**: AWS SAM for serverless deployment
-- **Local Development**: Docker Compose for local SQL Server and DynamoDB
-
-## Prerequisites
-
-- .NET 8 SDK
-- Docker Desktop
-- AWS CLI (configured with credentials)
-- AWS SAM CLI
-- PowerShell (for setup scripts)
-
-## Project Structure
-
-```
-EventLogger/
-├── src/
-│   ├── EventLogger.Api/          # Main API project
-│   └── EventLogger.Tests/        # Unit and integration tests
-├── docker-compose.yml            # Local database setup
-├── template.yaml                 # SAM deployment template
-├── simple-setup.ps1             # Quick setup script
-└── test-api-adaptive.ps1        # API testing script
-```
-
 ## Quick Start
 
-### 1. Clone and Setup
+After cloning this Repo
 
-```bash
-git clone <repository-url>
-cd EventLogger
-```
-
-### 2. Start Local Environment
+### 1. Start Local Environment
 
 ```powershell
 # Run the setup script to start databases
@@ -55,7 +21,7 @@ This will start:
 - DynamoDB Local on `http://localhost:8000`
 - DynamoDB Admin UI on `http://localhost:8001`
 
-### 3. Run the API Locally
+### 2. Run the API Locally
 
 ```bash
 cd src/EventLogger.Api
@@ -66,7 +32,7 @@ The API will be available at:
 - Swagger UI: `http://localhost:5153/swagger`
 - Health Check: `http://localhost:5153/api/healthcheck`
 
-### 4. Run with SAM CLI (Lambda Simulation)
+### 3. Run with SAM CLI (Lambda Simulation)
 
 ```bash
 cd src/EventLogger.Api
